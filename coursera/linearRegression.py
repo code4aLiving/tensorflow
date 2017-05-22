@@ -54,10 +54,18 @@ def linear_regression(data):
 	# Here we evaluate how well our model did. In a real example, we would want
 	# to use a separate validation and testing data set to avoid overfitting.
 	print(estimator.evaluate(input_fn=input_fn))
+	variables = estimator.get_variable_names()
+	for v in variables:
+		print(v,estimator.get_variable_value(v))
+	x_p = np.array([1.,2.])
+	i = 0
+	for p in estimator.predict({"x":x_p},as_iterable=True):
+		print(x_p[i],p)
+		i+=1
 
 if __name__ == "__main__":
 	data = read_data()
-	print(len(data.x),len(data.y))
+#	print(len(data.x),len(data.y))
 	
 	#data.plot()
 	linear_regression(data)
