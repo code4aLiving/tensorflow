@@ -18,7 +18,7 @@ def read_csv_data(filename):
 	df = pd.read_csv(filename, header=None, delimiter=",",dtype=np.float64)
 	return df
 
-def plot_data(df,col):
+def plot_data(df, col):
 	y = df.columns[-1]
 	plt.plot(df[col],df[y],'ro')
 	plt.show()
