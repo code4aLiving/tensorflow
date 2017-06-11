@@ -5,7 +5,9 @@ import tensorflow as tf
 import math
 
 def log_reg(df):
-	
+	'''
+	Logistic regression using the low level api.
+	'''
 	learning_rate = 0.01
 	training_epochs = 1000
 	batch_size = 10
@@ -20,10 +22,8 @@ def log_reg(df):
 	b = tf.Variable(tf.zeros([1]))
 
 	#Construct model
-#	pred = tf.nn.softmax(tf.matmul(x, W) + b) #Softmax
 	pred = tf.nn.sigmoid(tf.matmul(x, -W))
 	# Minimize error using cross entropy
-#	cost = tf.reduce_mean(-tf.reduce_sum(y*tf.log(pred), reduction_indices=0))
 	cost = tf.reduce_mean(tf.reduce_sum(-y * tf.log(pred) - (1 - y) * tf.log(1 - pred)))
 	# Gradient descent
 	optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
@@ -55,10 +55,6 @@ def log_reg(df):
 			#display logs per epoch step
 			if not (epoch + 1) % display_step:
 				print("Epoch:", '%04d' % (epoch+1), "cost=", "{:.9f}".format(avg_cost))
-		#_,c,p,yy = sess.run([optimizer, cost, pred, y], feed_dict={x: df[[0,1]], y: df[[2]]})
-		#print("Optimization finished")
-		#print(p,yy)
-		#print(len(p),len(yy))	
 		# Test model
 		pred_binary = tf.cast(tf.greater(pred, 0.5), tf.float32)
 		correct_prediction = tf.equal(pred_binary, y)
@@ -66,9 +62,10 @@ def log_reg(df):
 		accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 		print("Accuracy:", accuracy.eval({x:df[[0,1]] , y:df[[2]]}))
 
-	
-
 def logistic_regression(df):
+	'''
+	Attempting to use the contrib api.
+	'''
 	target = df.columns[-1]
 	print(df[target])
 	# See tf.contrib.learn.Estimator(...) for details on model_fn structure
@@ -87,9 +84,6 @@ def logistic_regression(df):
 	estimator.fit(input_fn=input_fn_train)
 	estimator.predict(x=x)
 	init = tf.global_variables_initializer()	
-	#with tf.Session() as sess:
-	#	sess.run(init)
-	#	sess.run(features[0])
 
 
 def plot_logistic_regression_data(df):
